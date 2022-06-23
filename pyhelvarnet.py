@@ -549,7 +549,7 @@ class HelvarNetClient:
             self.__HLVFADET + fade + "," +\
             "@" + self.clusterID + "." + self.memberID + "." + subnet + "." + device +\
             self.__TERMINATOR
-        print("Recalled Scene " + scene " for device " + device + " on subnet " + subnet + ".")
+        print("Recalled Scene " + scene + " for device " + device + " on subnet " + subnet + ".")
         print("Sent command looks like: " + message)
         self.__SendTCPMessageAndContinue(self.server, self.port, message)
 
