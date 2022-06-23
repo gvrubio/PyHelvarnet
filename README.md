@@ -1,7 +1,7 @@
 # PyHelvarnet
 This is a library that allows communication with Helvar™  compatible products
 
-I did not tested it yet on a real device and is done following the Helvar™ documentation on the protocol.
+I tested it a bit on a real device, and is done following the Helvar™ documentation on the protocol.
 
 You can just add the pyhelvarnet.py file to your program folder and use it like this:
 
