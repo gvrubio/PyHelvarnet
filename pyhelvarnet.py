@@ -1,6 +1,7 @@
 import socket
 import re
 
+
 class HelvarNetClient:
     def __init__(self, server, port):
         self.server = server
@@ -98,7 +99,8 @@ class HelvarNetClient:
         return received
 
     def QueryLastSceneInBlock(self, group: str, block: str):
-        # Returns the last scene in block, format is ?V:1,C:103,G:5,B:2=4#
+        ''' Returns the last scene in block, format is ?V:1,C:103,G:5,B:2=4#
+        '''
         message = self.__COMMAND +\
             self.__HLVVER + "1" + "," +\
             self.__HLVCMD + "103" + "," +\
@@ -131,6 +133,9 @@ class HelvarNetClient:
         return received
 
     def QueryGroupDescription(self, group: str):
+        '''
+        Returns the group description in string format
+        '''
         message = self.__COMMAND +\
             self.__HLVVER + "1" + "," +\
             self.__HLVCMD + "105" + "," +\
@@ -145,6 +150,9 @@ class HelvarNetClient:
         return received
 
     def QueryDeviceDescription(self, subnet: str, device: str):
+        '''
+        Returns the device description in string format
+        '''
         message = self.__COMMAND +\
             self.__HLVVER + "1" + "," +\
             self.__HLVCMD + "106" + "," +\
@@ -230,7 +238,7 @@ class HelvarNetClient:
             self.__HLVCMD + "129" + "," +\
             "@" + self.clusterID + "." + self.memberID + "." + subnet + "." + device +\
             self.__TERMINATOR
-        print("Checking if device is faulty.")
+        print("Checking if battery is faulty.")
         print("Sent command looks like: " + message)
         received = self.__SendTCPMessageAndRecv(
             self.server, self.port, message)
@@ -247,7 +255,7 @@ class HelvarNetClient:
             self.__HLVCMD + "150" + "," +\
             "@" + self.clusterID + "." + self.memberID + "." + subnet + "." + device +\
             self.__TERMINATOR
-        print("Checking if device is faulty.")
+        print("Retrieving measurements...")
         print("Sent command looks like: " + message)
         received = self.__SendTCPMessageAndRecv(
             self.server, self.port, message)
@@ -261,7 +269,7 @@ class HelvarNetClient:
             self.__HLVCMD + "151" + "," +\
             "@" + self.clusterID + "." + self.memberID + "." + subnet + "." + device +\
             self.__TERMINATOR
-        print("Checking if device is faulty.")
+        print("Asking for the device input state...")
         print("Sent command looks like: " + message)
         received = self.__SendTCPMessageAndRecv(
             self.server, self.port, message)
@@ -275,7 +283,7 @@ class HelvarNetClient:
             self.__HLVCMD + "152" + "," +\
             "@" + self.clusterID + "." + self.memberID + "." + subnet + "." + device +\
             self.__TERMINATOR
-        print("Checking if device is faulty.")
+        print("Asking for the load level...")
         print("Sent command looks like: " + message)
         received = self.__SendTCPMessageAndRecv(
             self.server, self.port, message)
@@ -290,7 +298,7 @@ class HelvarNetClient:
             self.__HLVCMD + "160" + "," +\
             "@" + self.clusterID + "." + self.memberID + "." + subnet + "." + device +\
             self.__TERMINATOR
-        print("Checking if device is faulty.")
+        print("Asking for the device power consumption...")
         print("Sent command looks like: " + message)
         received = self.__SendTCPMessageAndRecv(
             self.server, self.port, message)
@@ -304,7 +312,7 @@ class HelvarNetClient:
             self.__HLVCMD + "161" + "," +\
             self.__HLVGROUP + group +\
             self.__TERMINATOR
-        print("Checking if device is faulty.")
+        print("Asking for the group power consumption...")
         print("Sent command looks like: " + message)
         received = self.__SendTCPMessageAndRecv(
             self.server, self.port, message)
@@ -319,7 +327,7 @@ class HelvarNetClient:
             self.__HLVCMD + "170" + "," +\
             "@" + self.clusterID + "." + self.memberID + "." + subnet + "." + device +\
             self.__TERMINATOR
-        print("Checking if device is faulty.")
+        print("Asking the emergency function test time.")
         print("Sent command looks like: " + message)
         received = self.__SendTCPMessageAndRecv(
             self.server, self.port, message)
@@ -333,7 +341,7 @@ class HelvarNetClient:
             self.__HLVCMD + "171" + "," +\
             "@" + self.clusterID + "." + self.memberID + "." + subnet + "." + device +\
             self.__TERMINATOR
-        print("Checking if device is faulty.")
+        print("Asking the emergency function test state.")
         print("Sent command looks like: " + message)
         received = self.__SendTCPMessageAndRecv(
             self.server, self.port, message)
@@ -347,7 +355,7 @@ class HelvarNetClient:
             self.__HLVCMD + "172" + "," +\
             "@" + self.clusterID + "." + self.memberID + "." + subnet + "." + device +\
             self.__TERMINATOR
-        print("Checking if device is faulty.")
+        print("Asking the emergency duration test time.")
         print("Sent command looks like: " + message)
         received = self.__SendTCPMessageAndRecv(
             self.server, self.port, message)
@@ -361,7 +369,7 @@ class HelvarNetClient:
             self.__HLVCMD + "173" + "," +\
             "@" + self.clusterID + "." + self.memberID + "." + subnet + "." + device +\
             self.__TERMINATOR
-        print("Checking if device is faulty.")
+        print("Asking the emergency duration test state.")
         print("Sent command looks like: " + message)
         received = self.__SendTCPMessageAndRecv(
             self.server, self.port, message)
@@ -375,7 +383,7 @@ class HelvarNetClient:
             self.__HLVCMD + "174" + "," +\
             "@" + self.clusterID + "." + self.memberID + "." + subnet + "." + device +\
             self.__TERMINATOR
-        print("Checking if device is faulty.")
+        print("Checking emergency battery charge level.")
         print("Sent command looks like: " + message)
         received = self.__SendTCPMessageAndRecv(
             self.server, self.port, message)
@@ -389,7 +397,7 @@ class HelvarNetClient:
             self.__HLVCMD + "175" + "," +\
             "@" + self.clusterID + "." + self.memberID + "." + subnet + "." + device +\
             self.__TERMINATOR
-        print("Checking if device is faulty.")
+        print("Checking emergency battery time left.")
         print("Sent command looks like: " + message)
         received = self.__SendTCPMessageAndRecv(
             self.server, self.port, message)
@@ -403,7 +411,7 @@ class HelvarNetClient:
             self.__HLVCMD + "176" + "," +\
             "@" + self.clusterID + "." + self.memberID + "." + subnet + "." + device +\
             self.__TERMINATOR
-        print("Checking if device is faulty.")
+        print("Checking emergency total lamp time.")
         print("Sent command looks like: " + message)
         received = self.__SendTCPMessageAndRecv(
             self.server, self.port, message)
@@ -416,7 +424,7 @@ class HelvarNetClient:
             self.__HLVVER + "1" + "," +\
             self.__HLVCMD + "185" +\
             self.__TERMINATOR
-        print("Checking if device is faulty.")
+        print("Asking the time.")
         print("Sent command looks like: " + message)
         received = self.__SendTCPMessageAndRecv(
             self.server, self.port, message)
@@ -429,7 +437,7 @@ class HelvarNetClient:
             self.__HLVVER + "1" + "," +\
             self.__HLVCMD + "186" +\
             self.__TERMINATOR
-        print("Checking if device is faulty.")
+        print("Asking the longitude.")
         print("Sent command looks like: " + message)
         received = self.__SendTCPMessageAndRecv(
             self.server, self.port, message)
@@ -442,7 +450,7 @@ class HelvarNetClient:
             self.__HLVVER + "1" + "," +\
             self.__HLVCMD + "187" +\
             self.__TERMINATOR
-        print("Checking if device is faulty.")
+        print("Asking the latitude.")
         print("Sent command looks like: " + message)
         received = self.__SendTCPMessageAndRecv(
             self.server, self.port, message)
@@ -455,7 +463,7 @@ class HelvarNetClient:
             self.__HLVVER + "1" + "," +\
             self.__HLVCMD + "188" +\
             self.__TERMINATOR
-        print("Checking if device is faulty.")
+        print("Asking the timezone.")
         print("Sent command looks like: " + message)
         received = self.__SendTCPMessageAndRecv(
             self.server, self.port, message)
@@ -468,7 +476,7 @@ class HelvarNetClient:
             self.__HLVVER + "1" + "," +\
             self.__HLVCMD + "189" +\
             self.__TERMINATOR
-        print("Checking if device is faulty.")
+        print("Asking if we are in daylight savings.")
         print("Sent command looks like: " + message)
         received = self.__SendTCPMessageAndRecv(
             self.server, self.port, message)
@@ -484,7 +492,7 @@ class HelvarNetClient:
             self.__HLVVER + "1" + "," +\
             self.__HLVCMD + "190" +\
             self.__TERMINATOR
-        print("Checking if device is faulty.")
+        print("Asking the software version.")
         print("Sent command looks like: " + message)
         received = self.__SendTCPMessageAndRecv(
             self.server, self.port, message)
@@ -497,7 +505,7 @@ class HelvarNetClient:
             self.__HLVVER + "1" + "," +\
             self.__HLVCMD + "191" +\
             self.__TERMINATOR
-        print("Checking if device is faulty.")
+        print("Asking the helvarNet version.")
         print("Sent command looks like: " + message)
         received = self.__SendTCPMessageAndRecv(
             self.server, self.port, message)
@@ -521,7 +529,7 @@ class HelvarNetClient:
             self.__HLVSCN + scene + "," +\
             self.__HLVFADET + fade +\
             self.__TERMINATOR
-        print("Recalled Scene.")
+        print("Recalled Scene for group " + group + ".")
         print("Sent command looks like: " + message)
         self.__SendTCPMessageAndContinue(self.server, self.port, message)
 
@@ -541,7 +549,7 @@ class HelvarNetClient:
             self.__HLVFADET + fade + "," +\
             "@" + self.clusterID + "." + self.memberID + "." + subnet + "." + device +\
             self.__TERMINATOR
-        print("Recalled Scene.")
+        print("Recalled Scene " + scene " for device " + device + " on subnet " + subnet + ".")
         print("Sent command looks like: " + message)
         self.__SendTCPMessageAndContinue(self.server, self.port, message)
 
