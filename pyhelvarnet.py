@@ -1,25 +1,6 @@
 import socket
 import re
 
-
-def __SendTCPMessageAndRecv(HOST, PORT, Message):
-    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
-        s.settimeout(10)
-        try:
-            s.connect((HOST, PORT))
-            s.sendall(Message.encode())
-            data = s.recv(1024)
-            return data
-        except socket.error:
-            return None
-            
-
-def __SendTCPMessageAndContinue(HOST, PORT, Message):
-    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
-        s.connect((HOST, PORT))
-        s.sendall(Message.encode())
-
-
 class HelvarNetClient:
     def __init__(self, server, port):
         self.server = server
@@ -64,6 +45,22 @@ class HelvarNetClient:
         self.__HLVCLS = "K:"  # Constant Light Scene - Optional
         self.__HLVFSE = "O:"  # Force Store Scene - Optional
 
+    def __SendTCPMessageAndRecv(self, HOST, PORT, Message):
+        with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+            s.settimeout(10)
+            try:
+                s.connect((HOST, PORT))
+                s.sendall(Message.encode())
+                data = s.recv(1024)
+                return data
+            except socket.error:
+                return None
+
+    def __SendTCPMessageAndContinue(self, HOST, PORT, Message):
+        with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+            s.connect((HOST, PORT))
+            s.sendall(Message.encode())
+
     ################# Query Commands #################
 
     def QueryClusters(self):
@@ -77,7 +74,8 @@ class HelvarNetClient:
             self.__TERMINATOR
         print("Clusters Queried.")
         print("Sent command looks like: " + message)
-        received = __SendTCPMessageAndRecv(self.server, self.port, message)
+        received = self.__SendTCPMessageAndRecv(
+            self.server, self.port, message)
         received = re.search(
             "(?<=\=).*(?=#)", str(received)).group().split(',')
         return received
@@ -93,7 +91,8 @@ class HelvarNetClient:
             self.__TERMINATOR
         print("Routers Queried.")
         print("Sent command looks like: " + message)
-        received = __SendTCPMessageAndRecv(self.server, self.port, message)
+        received = self.__SendTCPMessageAndRecv(
+            self.server, self.port, message)
         received = re.search(
             "(?<=\=).*(?=#)", str(received)).group().split(',')
         return received
@@ -108,7 +107,8 @@ class HelvarNetClient:
             self.__TERMINATOR
         print("Last Scene Queried.")
         print("Sent command looks like: " + message)
-        received = __SendTCPMessageAndRecv(self.server, self.port, message)
+        received = self.__SendTCPMessageAndRecv(
+            self.server, self.port, message)
         received = re.search(
             "(?<=\=).*(?=#)", str(received)).group()
         return received
@@ -124,7 +124,8 @@ class HelvarNetClient:
             self.__TERMINATOR
         print("Queried device type.")
         print("Sent command looks like: " + message)
-        received = __SendTCPMessageAndRecv(self.server, self.port, message)
+        received = self.__SendTCPMessageAndRecv(
+            self.server, self.port, message)
         received = re.search(
             "(?<=\=).*(?=#)", str(received)).group()
         return received
@@ -137,7 +138,8 @@ class HelvarNetClient:
             self.__TERMINATOR
         print("Queried group description.")
         print("Sent command looks like: " + message)
-        received = __SendTCPMessageAndRecv(self.server, self.port, message)
+        received = self.__SendTCPMessageAndRecv(
+            self.server, self.port, message)
         received = re.search(
             "(?<=\=).*(?=#)", str(received)).group()
         return received
@@ -150,7 +152,8 @@ class HelvarNetClient:
             self.__TERMINATOR
         print("Queried device description")
         print("Sent command looks like: " + message)
-        received = __SendTCPMessageAndRecv(self.server, self.port, message)
+        received = self.__SendTCPMessageAndRecv(
+            self.server, self.port, message)
         received = re.search(
             "(?<=\=).*(?=#)", str(received)).group()
         return received
@@ -164,7 +167,8 @@ class HelvarNetClient:
             self.__TERMINATOR
         print("Queried device state")
         print("Sent command looks like: " + message)
-        received = __SendTCPMessageAndRecv(self.server, self.port, message)
+        received = self.__SendTCPMessageAndRecv(
+            self.server, self.port, message)
         received = re.search(
             "(?<=\=).*(?=#)", str(received)).group()
         return received
@@ -177,7 +181,8 @@ class HelvarNetClient:
             self.__TERMINATOR
         print("Checking if device is disabled.")
         print("Sent command looks like: " + message)
-        received = __SendTCPMessageAndRecv(self.server, self.port, message)
+        received = self.__SendTCPMessageAndRecv(
+            self.server, self.port, message)
         received = re.search(
             "(?<=\=).*(?=#)", str(received)).group()
         if received == "1":
@@ -193,7 +198,8 @@ class HelvarNetClient:
             self.__TERMINATOR
         print("Checking if device is missing.")
         print("Sent command looks like: " + message)
-        received = __SendTCPMessageAndRecv(self.server, self.port, message)
+        received = self.__SendTCPMessageAndRecv(
+            self.server, self.port, message)
         received = re.search(
             "(?<=\=).*(?=#)", str(received)).group()
         if received == "1":
@@ -209,7 +215,8 @@ class HelvarNetClient:
             self.__TERMINATOR
         print("Checking if device is faulty.")
         print("Sent command looks like: " + message)
-        received = __SendTCPMessageAndRecv(self.server, self.port, message)
+        received = self.__SendTCPMessageAndRecv(
+            self.server, self.port, message)
         received = re.search(
             "(?<=\=).*(?=#)", str(received)).group()
         if received == "1":
@@ -225,7 +232,8 @@ class HelvarNetClient:
             self.__TERMINATOR
         print("Checking if device is faulty.")
         print("Sent command looks like: " + message)
-        received = __SendTCPMessageAndRecv(self.server, self.port, message)
+        received = self.__SendTCPMessageAndRecv(
+            self.server, self.port, message)
         received = re.search(
             "(?<=\=).*(?=#)", str(received)).group()
         if received == "1":
@@ -241,7 +249,8 @@ class HelvarNetClient:
             self.__TERMINATOR
         print("Checking if device is faulty.")
         print("Sent command looks like: " + message)
-        received = __SendTCPMessageAndRecv(self.server, self.port, message)
+        received = self.__SendTCPMessageAndRecv(
+            self.server, self.port, message)
         received = re.search(
             "(?<=\=).*(?=#)", str(received)).group()
         return received
@@ -254,7 +263,8 @@ class HelvarNetClient:
             self.__TERMINATOR
         print("Checking if device is faulty.")
         print("Sent command looks like: " + message)
-        received = __SendTCPMessageAndRecv(self.server, self.port, message)
+        received = self.__SendTCPMessageAndRecv(
+            self.server, self.port, message)
         received = re.search(
             "(?<=\=).*(?=#)", str(received)).group()
         return received
@@ -267,12 +277,13 @@ class HelvarNetClient:
             self.__TERMINATOR
         print("Checking if device is faulty.")
         print("Sent command looks like: " + message)
-        received = __SendTCPMessageAndRecv(self.server, self.port, message)
+        received = self.__SendTCPMessageAndRecv(
+            self.server, self.port, message)
         received = re.search(
             "(?<=\=).*(?=#)", str(received)).group()
         return received
 
-    #### POWER
+    # POWER
     def QueryDevicePowerCompsumption(self, subnet: str, device: str):
         message = self.__COMMAND +\
             self.__HLVVER + "1" + "," +\
@@ -281,7 +292,8 @@ class HelvarNetClient:
             self.__TERMINATOR
         print("Checking if device is faulty.")
         print("Sent command looks like: " + message)
-        received = __SendTCPMessageAndRecv(self.server, self.port, message)
+        received = self.__SendTCPMessageAndRecv(
+            self.server, self.port, message)
         received = re.search(
             "(?<=\=).*(?=#)", str(received)).group()
         return received
@@ -294,12 +306,13 @@ class HelvarNetClient:
             self.__TERMINATOR
         print("Checking if device is faulty.")
         print("Sent command looks like: " + message)
-        received = __SendTCPMessageAndRecv(self.server, self.port, message)
+        received = self.__SendTCPMessageAndRecv(
+            self.server, self.port, message)
         received = re.search(
             "(?<=\=).*(?=#)", str(received)).group()
         return received
 
-    #### EMERGENCY TEST
+    # EMERGENCY TEST
     def QueryEmergencyFunctionTestTime(self, subnet: str, device: str):
         message = self.__COMMAND +\
             self.__HLVVER + "1" + "," +\
@@ -308,7 +321,8 @@ class HelvarNetClient:
             self.__TERMINATOR
         print("Checking if device is faulty.")
         print("Sent command looks like: " + message)
-        received = __SendTCPMessageAndRecv(self.server, self.port, message)
+        received = self.__SendTCPMessageAndRecv(
+            self.server, self.port, message)
         received = re.search(
             "(?<=\=).*(?=#)", str(received)).group()
         return received
@@ -321,7 +335,8 @@ class HelvarNetClient:
             self.__TERMINATOR
         print("Checking if device is faulty.")
         print("Sent command looks like: " + message)
-        received = __SendTCPMessageAndRecv(self.server, self.port, message)
+        received = self.__SendTCPMessageAndRecv(
+            self.server, self.port, message)
         received = re.search(
             "(?<=\=).*(?=#)", str(received)).group()
         return received
@@ -334,7 +349,8 @@ class HelvarNetClient:
             self.__TERMINATOR
         print("Checking if device is faulty.")
         print("Sent command looks like: " + message)
-        received = __SendTCPMessageAndRecv(self.server, self.port, message)
+        received = self.__SendTCPMessageAndRecv(
+            self.server, self.port, message)
         received = re.search(
             "(?<=\=).*(?=#)", str(received)).group()
         return received
@@ -347,7 +363,8 @@ class HelvarNetClient:
             self.__TERMINATOR
         print("Checking if device is faulty.")
         print("Sent command looks like: " + message)
-        received = __SendTCPMessageAndRecv(self.server, self.port, message)
+        received = self.__SendTCPMessageAndRecv(
+            self.server, self.port, message)
         received = re.search(
             "(?<=\=).*(?=#)", str(received)).group()
         return received
@@ -360,7 +377,8 @@ class HelvarNetClient:
             self.__TERMINATOR
         print("Checking if device is faulty.")
         print("Sent command looks like: " + message)
-        received = __SendTCPMessageAndRecv(self.server, self.port, message)
+        received = self.__SendTCPMessageAndRecv(
+            self.server, self.port, message)
         received = re.search(
             "(?<=\=).*(?=#)", str(received)).group()
         return received
@@ -373,7 +391,8 @@ class HelvarNetClient:
             self.__TERMINATOR
         print("Checking if device is faulty.")
         print("Sent command looks like: " + message)
-        received = __SendTCPMessageAndRecv(self.server, self.port, message)
+        received = self.__SendTCPMessageAndRecv(
+            self.server, self.port, message)
         received = re.search(
             "(?<=\=).*(?=#)", str(received)).group()
         return received
@@ -386,7 +405,8 @@ class HelvarNetClient:
             self.__TERMINATOR
         print("Checking if device is faulty.")
         print("Sent command looks like: " + message)
-        received = __SendTCPMessageAndRecv(self.server, self.port, message)
+        received = self.__SendTCPMessageAndRecv(
+            self.server, self.port, message)
         received = re.search(
             "(?<=\=).*(?=#)", str(received)).group()
         return received
@@ -398,7 +418,8 @@ class HelvarNetClient:
             self.__TERMINATOR
         print("Checking if device is faulty.")
         print("Sent command looks like: " + message)
-        received = __SendTCPMessageAndRecv(self.server, self.port, message)
+        received = self.__SendTCPMessageAndRecv(
+            self.server, self.port, message)
         received = re.search(
             "(?<=\=).*(?=#)", str(received)).group()
         return received
@@ -410,7 +431,8 @@ class HelvarNetClient:
             self.__TERMINATOR
         print("Checking if device is faulty.")
         print("Sent command looks like: " + message)
-        received = __SendTCPMessageAndRecv(self.server, self.port, message)
+        received = self.__SendTCPMessageAndRecv(
+            self.server, self.port, message)
         received = re.search(
             "(?<=\=).*(?=#)", str(received)).group()
         return received
@@ -422,7 +444,8 @@ class HelvarNetClient:
             self.__TERMINATOR
         print("Checking if device is faulty.")
         print("Sent command looks like: " + message)
-        received = __SendTCPMessageAndRecv(self.server, self.port, message)
+        received = self.__SendTCPMessageAndRecv(
+            self.server, self.port, message)
         received = re.search(
             "(?<=\=).*(?=#)", str(received)).group()
         return received
@@ -434,7 +457,8 @@ class HelvarNetClient:
             self.__TERMINATOR
         print("Checking if device is faulty.")
         print("Sent command looks like: " + message)
-        received = __SendTCPMessageAndRecv(self.server, self.port, message)
+        received = self.__SendTCPMessageAndRecv(
+            self.server, self.port, message)
         received = re.search(
             "(?<=\=).*(?=#)", str(received)).group()
         return received
@@ -446,7 +470,8 @@ class HelvarNetClient:
             self.__TERMINATOR
         print("Checking if device is faulty.")
         print("Sent command looks like: " + message)
-        received = __SendTCPMessageAndRecv(self.server, self.port, message)
+        received = self.__SendTCPMessageAndRecv(
+            self.server, self.port, message)
         received = re.search(
             "(?<=\=).*(?=#)", str(received)).group()
         if received == "1":
@@ -461,7 +486,8 @@ class HelvarNetClient:
             self.__TERMINATOR
         print("Checking if device is faulty.")
         print("Sent command looks like: " + message)
-        received = __SendTCPMessageAndRecv(self.server, self.port, message)
+        received = self.__SendTCPMessageAndRecv(
+            self.server, self.port, message)
         received = re.search(
             "(?<=\=).*(?=#)", str(received)).group()
         return received
@@ -473,12 +499,13 @@ class HelvarNetClient:
             self.__TERMINATOR
         print("Checking if device is faulty.")
         print("Sent command looks like: " + message)
-        received = __SendTCPMessageAndRecv(self.server, self.port, message)
+        received = self.__SendTCPMessageAndRecv(
+            self.server, self.port, message)
         received = re.search(
             "(?<=\=).*(?=#)", str(received)).group()
         return received
 
-########BOOKMARK - PAGE 38
+# BOOKMARK - PAGE 38
     ################# Control Commands #################
 
     def RecallSceneOnGroup(self, group: str, block: str, scene: str, fade: str):
@@ -496,7 +523,7 @@ class HelvarNetClient:
             self.__TERMINATOR
         print("Recalled Scene.")
         print("Sent command looks like: " + message)
-        __SendTCPMessageAndContinue(self.server, self.port, message)
+        self.__SendTCPMessageAndContinue(self.server, self.port, message)
 
     def RecallSceneOnDevice(self, subnet: str, device: str, block: str, scene: str, fade: str):
         ''' If ip is 192.168.1.10 for the helvar router, 
@@ -516,7 +543,7 @@ class HelvarNetClient:
             self.__TERMINATOR
         print("Recalled Scene.")
         print("Sent command looks like: " + message)
-        __SendTCPMessageAndContinue(self.server, self.port, message)
+        self.__SendTCPMessageAndContinue(self.server, self.port, message)
 
     def SetGroupAbsoluteLevel(self, group: str, level: str, fade: str):
         message = self.__COMMAND +\
@@ -528,7 +555,7 @@ class HelvarNetClient:
             self.__TERMINATOR
         print("Level Set!")
         print("Sent command looks like: " + message)
-        __SendTCPMessageAndContinue(self.server, self.port, message)
+        self.__SendTCPMessageAndContinue(self.server, self.port, message)
 
     def SetDeviceAbsoluteLevel(self, subnet: str, device: str, level: str, fade: str):
         message = self.__COMMAND +\
@@ -540,7 +567,7 @@ class HelvarNetClient:
             self.__TERMINATOR
         print("Level Set!")
         print("Sent command looks like: " + message)
-        __SendTCPMessageAndContinue(self.server, self.port, message)
+        self.__SendTCPMessageAndContinue(self.server, self.port, message)
 
     def SetGroupLevelAbsoluteProportion(self):
         print("TBD")
