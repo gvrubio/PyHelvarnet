@@ -14,7 +14,7 @@ dalirouter = pyhelvarnet.HelvarNetClient("192.168.0.200", 50000)
 print(dalirouter.QueryDeviceIsDisabled("1","1"))
 
 # Recall on group 10, block 1, scene 6 with 5 seconds of fade
-dalirouter.RecallSceneOnGroup("10","1","6","500")
+dalirouter.RecallSceneOnGroup(10,1,6,500)
 ```
 Queries return values with the response of the device.
 

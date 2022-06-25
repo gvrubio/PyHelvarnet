@@ -1,11 +1,12 @@
 import socket
 import re
 
-
 class HelvarNetClient:
     def __init__(self, server, port):
         self.server = server
         self.port = port
+        # Cluster ID and Member ID are part of the internal device addresses,
+        # the control device generates them using the IP address info
         self.clusterID = server.split(".")[2]
         self.memberID = server.split(".")[3]
 
@@ -63,7 +64,6 @@ class HelvarNetClient:
             s.sendall(Message.encode())
 
     ################# Query Commands #################
-
     def QueryClusters(self):
         ''' Returns comma separates list of clusters in the format of ?V:1,C:101=1,2,253# from
         the router.
@@ -98,9 +98,11 @@ class HelvarNetClient:
             "(?<=\=).*(?=#)", str(received)).group().split(',')
         return received
 
-    def QueryLastSceneInBlock(self, group: str, block: str):
+    def QueryLastSceneInBlock(self, group, block):
         ''' Returns the last scene in block, format is ?V:1,C:103,G:5,B:2=4#
         '''
+        group = str(group)
+        block = str(block)
         message = self.__COMMAND +\
             self.__HLVVER + "1" + "," +\
             self.__HLVCMD + "103" + "," +\
@@ -115,10 +117,12 @@ class HelvarNetClient:
             "(?<=\=).*(?=#)", str(received)).group()
         return received
 
-    def QueryDeviceType(self, subnet: str, device: str, ):
+    def QueryDeviceType(self, subnet, device):
         ''' There's a full description of the device types in "DALI Device Type Information.txt"
         I will just give you the return of the router, IDK how helvar does the conversion from HEX to ASCII in this case (WTF Helvar)
         '''
+        subnet = str(subnet)
+        device = str(device)        
         message = self.__COMMAND +\
             self.__HLVVER + "1" + "," +\
             self.__HLVCMD + "104" + "," +\
@@ -132,10 +136,11 @@ class HelvarNetClient:
             "(?<=\=).*(?=#)", str(received)).group()
         return received
 
-    def QueryGroupDescription(self, group: str):
+    def QueryGroupDescription(self, group):
         '''
         Returns the group description in string format
         '''
+        group = str(group)
         message = self.__COMMAND +\
             self.__HLVVER + "1" + "," +\
             self.__HLVCMD + "105" + "," +\
@@ -149,10 +154,12 @@ class HelvarNetClient:
             "(?<=\=).*(?=#)", str(received)).group()
         return received
 
-    def QueryDeviceDescription(self, subnet: str, device: str):
+    def QueryDeviceDescription(self, subnet, device):
         '''
         Returns the device description in string format
         '''
+        subnet = str(subnet)
+        device = str(device)
         message = self.__COMMAND +\
             self.__HLVVER + "1" + "," +\
             self.__HLVCMD + "106" + "," +\
@@ -166,7 +173,9 @@ class HelvarNetClient:
             "(?<=\=).*(?=#)", str(received)).group()
         return received
 
-    def QueryDeviceState(self, subnet: str, device: str):
+    def QueryDeviceState(self, subnet, device):
+        subnet = str(subnet)
+        device = str(device)
         # Check device state table
         message = self.__COMMAND +\
             self.__HLVVER + "1" + "," +\
@@ -181,7 +190,9 @@ class HelvarNetClient:
             "(?<=\=).*(?=#)", str(received)).group()
         return received
 
-    def QueryDeviceIsDisabled(self, subnet: str, device: str):
+    def QueryDeviceIsDisabled(self, subnet, device):
+        subnet = str(subnet)
+        device = str(device)
         message = self.__COMMAND +\
             self.__HLVVER + "1" + "," +\
             self.__HLVCMD + "111" + "," +\
@@ -198,7 +209,9 @@ class HelvarNetClient:
         elif received == "0":
             return False
 
-    def QueryDeviceIsMissing(self, subnet: str, device: str):
+    def QueryDeviceIsMissing(self, subnet, device):
+        subnet = str(subnet)
+        device = str(device)
         message = self.__COMMAND +\
             self.__HLVVER + "1" + "," +\
             self.__HLVCMD + "113" + "," +\
@@ -215,7 +228,9 @@ class HelvarNetClient:
         elif received == "0":
             return False
 
-    def QueryDeviceIsFaulty(self, subnet: str, device: str):
+    def QueryDeviceIsFaulty(self, subnet, device):
+        subnet = str(subnet)
+        device = str(device)
         message = self.__COMMAND +\
             self.__HLVVER + "1" + "," +\
             self.__HLVCMD + "114" + "," +\
@@ -232,7 +247,9 @@ class HelvarNetClient:
         elif received == "0":
             return False
 
-    def QueryEmergencyBatteryFailure(self, subnet: str, device: str):
+    def QueryEmergencyBatteryFailure(self, subnet, device):
+        subnet = str(subnet)
+        device = str(device)
         message = self.__COMMAND +\
             self.__HLVVER + "1" + "," +\
             self.__HLVCMD + "129" + "," +\
@@ -249,7 +266,9 @@ class HelvarNetClient:
         elif received == "0":
             return False
 
-    def QueryDeviceMeasurement(self, subnet: str, device: str):
+    def QueryDeviceMeasurement(self, subnet, device):
+        subnet = str(subnet)
+        device = str(device)
         message = self.__COMMAND +\
             self.__HLVVER + "1" + "," +\
             self.__HLVCMD + "150" + "," +\
@@ -263,7 +282,9 @@ class HelvarNetClient:
             "(?<=\=).*(?=#)", str(received)).group()
         return received
 
-    def QueryDeviceInputState(self, subnet: str, device: str):
+    def QueryDeviceInputState(self, subnet, device):
+        subnet = str(subnet)
+        device = str(device)
         message = self.__COMMAND +\
             self.__HLVVER + "1" + "," +\
             self.__HLVCMD + "151" + "," +\
@@ -277,7 +298,9 @@ class HelvarNetClient:
             "(?<=\=).*(?=#)", str(received)).group()
         return received
 
-    def QueryLoadLevel(self, subnet: str, device: str):
+    def QueryLoadLevel(self, subnet, device):
+        subnet = str(subnet)
+        device = str(device)
         message = self.__COMMAND +\
             self.__HLVVER + "1" + "," +\
             self.__HLVCMD + "152" + "," +\
@@ -292,7 +315,9 @@ class HelvarNetClient:
         return received
 
     # POWER
-    def QueryDevicePowerCompsumption(self, subnet: str, device: str):
+    def QueryDevicePowerCompsumption(self, subnet, device):
+        subnet = str(subnet)
+        device = str(device)
         message = self.__COMMAND +\
             self.__HLVVER + "1" + "," +\
             self.__HLVCMD + "160" + "," +\
@@ -306,7 +331,8 @@ class HelvarNetClient:
             "(?<=\=).*(?=#)", str(received)).group()
         return received
 
-    def QueryGroupPowerCompsumption(self, group: str):
+    def QueryGroupPowerCompsumption(self, group):
+        group = str(group)
         message = self.__COMMAND +\
             self.__HLVVER + "1" + "," +\
             self.__HLVCMD + "161" + "," +\
@@ -321,7 +347,9 @@ class HelvarNetClient:
         return received
 
     # EMERGENCY TEST
-    def QueryEmergencyFunctionTestTime(self, subnet: str, device: str):
+    def QueryEmergencyFunctionTestTime(self, subnet, device):
+        subnet = str(subnet)
+        device = str(device)
         message = self.__COMMAND +\
             self.__HLVVER + "1" + "," +\
             self.__HLVCMD + "170" + "," +\
@@ -335,7 +363,9 @@ class HelvarNetClient:
             "(?<=\=).*(?=#)", str(received)).group()
         return received
 
-    def QueryEmergencyFunctionTestState(self, subnet: str, device: str):
+    def QueryEmergencyFunctionTestState(self, subnet, device):
+        subnet = str(subnet)
+        device = str(device)
         message = self.__COMMAND +\
             self.__HLVVER + "1" + "," +\
             self.__HLVCMD + "171" + "," +\
@@ -349,7 +379,9 @@ class HelvarNetClient:
             "(?<=\=).*(?=#)", str(received)).group()
         return received
 
-    def QueryEmergencyDurationTestTime(self, subnet: str, device: str):
+    def QueryEmergencyDurationTestTime(self, subnet, device):
+        subnet = str(subnet)
+        device = str(device)
         message = self.__COMMAND +\
             self.__HLVVER + "1" + "," +\
             self.__HLVCMD + "172" + "," +\
@@ -363,7 +395,9 @@ class HelvarNetClient:
             "(?<=\=).*(?=#)", str(received)).group()
         return received
 
-    def QueryEmergencyDurationTestState(self, subnet: str, device: str):
+    def QueryEmergencyDurationTestState(self, subnet, device):
+        subnet = str(subnet)
+        device = str(device)
         message = self.__COMMAND +\
             self.__HLVVER + "1" + "," +\
             self.__HLVCMD + "173" + "," +\
@@ -377,7 +411,9 @@ class HelvarNetClient:
             "(?<=\=).*(?=#)", str(received)).group()
         return received
 
-    def QueryEmergencyBatteryCharge(self, subnet: str, device: str):
+    def QueryEmergencyBatteryCharge(self, subnet, device):
+        subnet = str(subnet)
+        device = str(device)
         message = self.__COMMAND +\
             self.__HLVVER + "1" + "," +\
             self.__HLVCMD + "174" + "," +\
@@ -391,7 +427,9 @@ class HelvarNetClient:
             "(?<=\=).*(?=#)", str(received)).group()
         return received
 
-    def QueryEmergencyBatteryTime(self, subnet: str, device: str):
+    def QueryEmergencyBatteryTime(self, subnet, device):
+        subnet = str(subnet)
+        device = str(device)
         message = self.__COMMAND +\
             self.__HLVVER + "1" + "," +\
             self.__HLVCMD + "175" + "," +\
@@ -405,7 +443,9 @@ class HelvarNetClient:
             "(?<=\=).*(?=#)", str(received)).group()
         return received
 
-    def QueryEmergencyTotalLampTime(self, subnet: str, device: str):
+    def QueryEmergencyTotalLampTime(self, subnet, device):
+        subnet = str(subnet)
+        device = str(device)
         message = self.__COMMAND +\
             self.__HLVVER + "1" + "," +\
             self.__HLVCMD + "176" + "," +\
@@ -513,14 +553,17 @@ class HelvarNetClient:
             "(?<=\=).*(?=#)", str(received)).group()
         return received
 
-# BOOKMARK - PAGE 38
+    # BOOKMARK - PAGE 38
     ################# Control Commands #################
-
-    def RecallSceneOnGroup(self, group: str, block: str, scene: str, fade: str):
-        """It sends an string that looks like this: 
-        >V:1,G:1,B:1,S:1,F:300# 
-        via TCP socket to the address of the Helvar dali router you defined 
+    def RecallSceneOnGroup(self, group, block, scene, fade):
+        """It sends an string that looks like this:
+        >V:1,G:1,B:1,S:1,F:300#
+        via TCP socket to the address of the Helvar dali router you defined
         while you instantiated the object"""
+        group = str(group)
+        block = str(block)
+        scene = str(scene)
+        fade = str(fade)
         message = self.__COMMAND +\
             self.__HLVVER + "1" + "," +\
             self.__HLVCMD + "11" + "," +\
@@ -533,14 +576,19 @@ class HelvarNetClient:
         print("Sent command looks like: " + message)
         self.__SendTCPMessageAndContinue(self.server, self.port, message)
 
-    def RecallSceneOnDevice(self, subnet: str, device: str, block: str, scene: str, fade: str):
-        ''' If ip is 192.168.1.10 for the helvar router, 
+    def RecallSceneOnDevice(self, subnet, device, block, scene, fade):
+        ''' If ip is 192.168.1.10 for the helvar router,
         192.168.<- this is removed | this is the starting prefix of the devide address ->1.10
         Next goes the DALI or DMX subnet id, 1 if theres only 1.
         And then the device id (Dali address)
         The full device address for a device with dali address 1 and subnet 1, looks like:
         1.10.1.1
         '''
+        subnet = str(subnet)
+        device = str(device)
+        block = str(block)
+        scene = str(scene)
+        fade = str(fade)
         message = self.__COMMAND +\
             self.__HLVVER + "1" + "," +\
             self.__HLVCMD + "12" + "," +\
@@ -554,7 +602,10 @@ class HelvarNetClient:
         print("Sent command looks like: " + message)
         self.__SendTCPMessageAndContinue(self.server, self.port, message)
 
-    def SetGroupAbsoluteLevel(self, group: str, level: str, fade: str):
+    def SetGroupAbsoluteLevel(self, group, level, fade):
+        group = str(group)
+        level = str(level)
+        fade = str(fade)
         message = self.__COMMAND +\
             self.__HLVVER + "1" + "," +\
             self.__HLVCMD + "13" + "," +\
@@ -566,7 +617,11 @@ class HelvarNetClient:
         print("Sent command looks like: " + message)
         self.__SendTCPMessageAndContinue(self.server, self.port, message)
 
-    def SetDeviceAbsoluteLevel(self, subnet: str, device: str, level: str, fade: str):
+    def SetDeviceAbsoluteLevel(self, subnet, device, level, fade):
+        subnet = str(subnet)
+        device = str(device)
+        level = str(level)
+        fade = str(fade)
         message = self.__COMMAND +\
             self.__HLVVER + "1" + "," +\
             self.__HLVCMD + "14" + "," +\
