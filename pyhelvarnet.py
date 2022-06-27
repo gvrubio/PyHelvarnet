@@ -1,6 +1,7 @@
 import socket
 import re
 
+
 class HelvarNetClient:
     def __init__(self, server, port):
         self.server = server
@@ -122,7 +123,7 @@ class HelvarNetClient:
         I will just give you the return of the router, IDK how helvar does the conversion from HEX to ASCII in this case (WTF Helvar)
         '''
         subnet = str(subnet)
-        device = str(device)        
+        device = str(device)
         message = self.__COMMAND +\
             self.__HLVVER + "1" + "," +\
             self.__HLVCMD + "104" + "," +\
@@ -553,8 +554,66 @@ class HelvarNetClient:
             "(?<=\=).*(?=#)", str(received)).group()
         return received
 
-    # BOOKMARK - PAGE 38
+    ################# Configuration Commands #################
+
+    def StoreSceneForGroup(self, group, force: bool, block, scene, level):
+        '''
+        For now helvar only gives us the interface to change scene levels, no colors yet :((
+        The "Force" flag overwrites scenes with "ignore" set.
+        '''
+
+        group = str(group)
+        block = str(block)
+        scene = str(scene)
+        level = str(level)
+
+        if force == True:
+            force = "1"
+        else:
+            force = "0"
+
+        message = self.__COMMAND +\
+            self.__HLVVER + "1" + "," +\
+            self.__HLVCMD + "201" + "," +\
+            self.__HLVGROUP + group + "," +\
+            self.__HLVFSE + force + "," +\
+            self.__HLVBLOCK + block + "," +\
+            self.__HLVSCN + scene + "," +\
+            self.__HLVLEVEL + level +\
+            self.__TERMINATOR
+        print("Stored Scene for group " + group + ".")
+        print("Sent command looks like: " + message)
+        self.__SendTCPMessageAndContinue(self.server, self.port, message)
+
+    def StoreSceneOnDevice(self, subnet, device, force, block, scene, level):
+        subnet = str(subnet)
+        device = str(device)
+        block = str(block)
+        scene = str(scene)
+        level = str(level)
+
+
+        if force == True:
+            force = "1"
+        else:
+            force = "0"
+
+        message = self.__COMMAND +\
+            self.__HLVVER + "1" + "," +\
+            self.__HLVCMD + "201" + "," +\
+            "@" + self.clusterID + "." + self.memberID + "." + subnet + "." + device +\
+            self.__HLVFSE + force + "," +\
+            self.__HLVBLOCK + block + "," +\
+            self.__HLVSCN + scene + "," +\
+            self.__HLVLEVEL + level +\
+            self.__TERMINATOR
+        print("Stored Scene for device " + device + ".")
+        print("Sent command looks like: " + message)
+        self.__SendTCPMessageAndContinue(self.server, self.port, message)  
+
+    ###### 39    
     ################# Control Commands #################
+
     def RecallSceneOnGroup(self, group, block, scene, fade):
         """It sends an string that looks like this:
         >V:1,G:1,B:1,S:1,F:300#
