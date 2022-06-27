@@ -1,5 +1,8 @@
 import socket
 import re
+import datetime
+
+from Tests import GetCurrentTimeEpoch
 
 
 class HelvarNetClient:
@@ -47,6 +50,10 @@ class HelvarNetClient:
         self.__HLVDST = "Y:"  # Daylight Saving Time
         self.__HLVCLS = "K:"  # Constant Light Scene - Optional
         self.__HLVFSE = "O:"  # Force Store Scene - Optional
+
+    def GetCurrentTimeEpoch():
+        epoch = datetime.datetime.now().strftime('%s')
+        return str(epoch)
 
     def __SendTCPMessageAndRecv(self, HOST, PORT, Message):
         with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
@@ -555,23 +562,17 @@ class HelvarNetClient:
         return received
 
     ################# Configuration Commands #################
-
+    # Scenes
     def StoreSceneForGroup(self, group, force: bool, block, scene, level):
         '''
         For now helvar only gives us the interface to change scene levels, no colors yet :((
         The "Force" flag overwrites scenes with "ignore" set.
         '''
-
         group = str(group)
         block = str(block)
         scene = str(scene)
         level = str(level)
-
-        if force == True:
-            force = "1"
-        else:
-            force = "0"
-
+        force = "1" if force == True else "0"
         message = self.__COMMAND +\
             self.__HLVVER + "1" + "," +\
             self.__HLVCMD + "201" + "," +\
@@ -585,22 +586,16 @@ class HelvarNetClient:
         print("Sent command looks like: " + message)
         self.__SendTCPMessageAndContinue(self.server, self.port, message)
 
-    def StoreSceneOnDevice(self, subnet, device, force, block, scene, level):
+    def StoreSceneOnDevice(self, subnet, device, force: bool, block, scene, level):
         subnet = str(subnet)
         device = str(device)
         block = str(block)
         scene = str(scene)
         level = str(level)
-
-
-        if force == True:
-            force = "1"
-        else:
-            force = "0"
-
+        force = "1" if force == True else "0"
         message = self.__COMMAND +\
             self.__HLVVER + "1" + "," +\
-            self.__HLVCMD + "201" + "," +\
+            self.__HLVCMD + "202" + "," +\
             "@" + self.clusterID + "." + self.memberID + "." + subnet + "." + device +\
             self.__HLVFSE + force + "," +\
             self.__HLVBLOCK + block + "," +\
@@ -609,9 +604,108 @@ class HelvarNetClient:
             self.__TERMINATOR
         print("Stored Scene for device " + device + ".")
         print("Sent command looks like: " + message)
-        self.__SendTCPMessageAndContinue(self.server, self.port, message)  
+        self.__SendTCPMessageAndContinue(self.server, self.port, message)
 
-    ###### 39    
+    def StoreCurrSceneForGroup(self, group, force: bool, block, scene):
+        group = str(group)
+        block = str(block)
+        scene = str(scene)
+        force = "1" if force == True else "0"
+        message = self.__COMMAND +\
+            self.__HLVVER + "1" + "," +\
+            self.__HLVCMD + "203" + "," +\
+            self.__HLVGROUP + group + "," +\
+            self.__HLVFSE + force + "," +\
+            self.__HLVBLOCK + block + "," +\
+            self.__HLVSCN + scene +\
+            self.__TERMINATOR
+        print("Stored Scene for group " + group + ".")
+        print("Sent command looks like: " + message)
+        self.__SendTCPMessageAndContinue(self.server, self.port, message)
+
+    def StoreCurrSceneForDevice(self, subnet, device, force: bool, block, scene):
+        subnet = str(subnet)
+        device = str(device)
+        block = str(block)
+        scene = str(scene)
+        force = "1" if force == True else "0"
+        message = self.__COMMAND +\
+            self.__HLVVER + "1" + "," +\
+            self.__HLVCMD + "204" + "," +\
+            "@" + self.clusterID + "." + self.memberID + "." + subnet + "." + device +\
+            self.__HLVFSE + force + "," +\
+            self.__HLVBLOCK + block + "," +\
+            self.__HLVSCN + scene +\
+            self.__TERMINATOR
+        print("Stored Scene for device " + device + ".")
+        print("Sent command looks like: " + message)
+        self.__SendTCPMessageAndContinue(self.server, self.port, message)
+    # Emergecy Lights
+
+    def ResetGroupEmergencyLampBatTime(self, group):
+        group = str(group)
+        message = self.__COMMAND +\
+            self.__HLVVER + "1" + "," +\
+            self.__HLVCMD + "205" + "," +\
+            self.__HLVGROUP + group +\
+            self.__TERMINATOR
+        print("Resetted emergency lights for group: " + group + ".")
+        print("Sent command looks like: " + message)
+        self.__SendTCPMessageAndContinue(self.server, self.port, message)
+
+    def ResetDeviceEmergencyLampBatTime(self, subnet, device):
+        subnet = str(subnet)
+        device = str(device)
+        message = self.__COMMAND +\
+            self.__HLVVER + "1" + "," +\
+            self.__HLVCMD + "206" + "," +\
+            "@" + self.clusterID + "." + self.memberID + "." + subnet + "." + device +\
+            self.__TERMINATOR
+        print("Resetted emergency lights for device: " +
+              device + "on subnet: " + subnet + ".")
+        print("Sent command looks like: " + message)
+        self.__SendTCPMessageAndContinue(self.server, self.port, message)
+
+    ## Time and location
+    def SetRouterCurrentDateTime(self):
+        epoch = GetCurrentTimeEpoch()
+        message = self.__COMMAND +\
+            self.__HLVVER + "1" + "," +\
+            self.__HLVCMD + "241" + "," +\
+            self.__HLVTIME + epoch +\
+            self.__TERMINATOR
+        print("Updated time and date using the epoch: " + epoch)
+        print("Sent command looks like: " + message)
+        self.__SendTCPMessageAndContinue(self.server, self.port, message)
+
+    def SetLatitude(self):
+        print("To be developed")
+
+    def SetLongitude(self):
+        print("To be developed")
+
+    def SetTimezone(self, hours):
+        secs = hours * (60 ** 2)
+        message = self.__COMMAND +\
+            self.__HLVVER + "1" + "," +\
+            self.__HLVCMD + "244" + "," +\
+            self.__HLVTIMEZ + secs +\
+            self.__TERMINATOR
+        print("We are in timezone hours: " + hours)
+        print("Sent command looks like: " + message)
+        self.__SendTCPMessageAndContinue(self.server, self.port, message)
+
+    def SetDaylightSavingTime(self, isDst: bool):
+        dst = "1" if isDst else "0"
+        message = self.__COMMAND +\
+            self.__HLVVER + "1" + "," +\
+            self.__HLVCMD + "245" + "," +\
+            self.__HLVDST + dst +\
+            self.__TERMINATOR
+        print("Daylight saving time enabled: " + str(isDst))
+        print("Sent command looks like: " + message)
+        self.__SendTCPMessageAndContinue(self.server, self.port, message)
+
     ################# Control Commands #################
 
     def RecallSceneOnGroup(self, group, block, scene, fade):
@@ -693,13 +787,13 @@ class HelvarNetClient:
         self.__SendTCPMessageAndContinue(self.server, self.port, message)
 
     def SetGroupLevelAbsoluteProportion(self):
-        print("TBD")
+        print("To be developed")
 
     def SetDeviceLevelAbsoluteProportion(self):
-        print("TBD")
+        print("To be developed")
 
     def SetGroupLevelModifyProportion(self):
-        print("TBD")
+        print("To be developed")
 
     def SetDeviceLevelModifyProportion(self):
-        print("TBD")
+        print("To be developed")
