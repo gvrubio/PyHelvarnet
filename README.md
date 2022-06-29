@@ -34,6 +34,13 @@ Queries return values with the response of the device.
 Control commands does not return anything the same as configuration commands.
 
 ---
+
+To be done:
+- [ ] Finish implementing all commands (90% or so already done)
+- [ ] Standard logs - Im using prints, eww!
+- [ ] Probably a reorganization of the code...
+
+---
 # Disclaimer
 
 Halvar™ is a registered trademark of Helvar Ltd.
