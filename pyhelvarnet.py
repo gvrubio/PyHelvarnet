@@ -2,9 +2,6 @@ import socket
 import re
 import datetime
 
-from Tests import GetCurrentTimeEpoch
-
-
 class HelvarNetClient:
     def __init__(self, server, port):
         self.server = server
@@ -51,7 +48,7 @@ class HelvarNetClient:
         self.__HLVCLS = "K:"  # Constant Light Scene - Optional
         self.__HLVFSE = "O:"  # Force Store Scene - Optional
 
-    def GetCurrentTimeEpoch():
+    def __GetCurrentTimeEpoch():
         epoch = datetime.datetime.now().strftime('%s')
         return str(epoch)
 
@@ -70,6 +67,7 @@ class HelvarNetClient:
         with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
             s.connect((HOST, PORT))
             s.sendall(Message.encode())
+
 
     ################# Query Commands #################
     def QueryClusters(self):
@@ -668,7 +666,7 @@ class HelvarNetClient:
 
     ## Time and location
     def SetRouterCurrentDateTime(self):
-        epoch = GetCurrentTimeEpoch()
+        epoch = self.__GetCurrentTimeEpoch()
         message = self.__COMMAND +\
             self.__HLVVER + "1" + "," +\
             self.__HLVCMD + "241" + "," +\
